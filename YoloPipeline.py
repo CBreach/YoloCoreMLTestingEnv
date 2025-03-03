@@ -45,7 +45,7 @@ class YOLOPipeline:
         self.nms = nms
         self.batch = batch
     
-    def load_model(self) -> None:
+    def loadModel(self) -> None:
         """
         Loads the model
         """
@@ -57,7 +57,7 @@ class YOLOPipeline:
             logging.error("Failed to load model: %s", e)
             raise
     
-    def run_tests(self) -> None:
+    def runTests(self) -> None:
         """
         runs an inference test on a test image to verify that the model is working as expected
         """
@@ -89,34 +89,34 @@ class YOLOPipeline:
         #     raise
     
     
-    def build_export_command(self) -> list:
+    def buildExportCommand(self) -> list:
         pass
     
-    def convert_to_coreml(self) -> None:
+    def convertToCoreml(self) -> None:
         
         logging.info("Converting model to coreml format...")
         
         pass
     
-    def compress_model(self) -> None:
+    def compressModel(self) -> None:
         """
             We might not need this since our model is quite small
             
         """
         pass
     
-    def fullpipeline(self) -> None:
+    def fullPipeline(self) -> None:
         """
             Runs the entire pipeline: loading, testing, converting and compressing the model
         """
-        self.load_model()
-        self.run_tests()
-        self.convert_to_coreml()
-        self.compress_model()
+        self.loadModel()
+        self.runTests()
+        self.convertToCoreml()
+        self.compressModel()
         
 if __name__ == "__main__":
-    pipeline = YOLOPipeline()
-    pipeline.fullpipeline()
+    pipeline = YOLOPipeline() 
+    pipeline.fullPipeline()
         
         
         
