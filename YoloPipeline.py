@@ -123,10 +123,16 @@ class YOLOPipeline:
         self.compressModel()
     
     
-    def populateImageArr(self) -> None:
+    def populateImageArr(self) -> list[str]:
         
+        testingList : list[str]
+        directoryPath = "testingSet"
         
-        pass
+        for file in os.listdir(directoryPath):
+            if file != ".DS_Store":
+                testingList.append(file)
+        
+        return testingList
     
     
 if __name__ == "__main__":
