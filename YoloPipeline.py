@@ -8,7 +8,7 @@ import os
 from typing import Union, Tuple
 
 """
-    This file is where the testing script will reside, the pipeline as well as the loging functions will be in this unique file
+    This file is where the testing script will reside, the pipeline as well as the logging functions will be in this unique file
     
     Imported libraries:
         Ultralytics: needed for YOLO model 
@@ -23,17 +23,18 @@ logging.basicConfig(level=logging.INFO, format = '[%(levelname)s] %(message)s')
 
 
 class YOLOPipeline:
-    def __init__(self,
-                 model_path: str,
-                 export_path: str,
-                 test_image: list[str] = ["path/to/test_image.jpg"],
-                 export_format: str = 'coreml',
-                 imgsz: Union[int, Tuple[int,int]] = 640,
-                 half: bool = False,
-                 int8: bool = False,
-                 nms: bool = False,
-                 batch: int =1,
-                 ):
+    def __init__(
+            self,
+            model_path: str,
+            export_path: str,
+            test_image: list[str] = ["path/to/test_image.jpg"],
+            export_format: str = 'coreml',
+            imgsz: Union[int, Tuple[int,int]] = 640,
+            half: bool = False,
+            int8: bool = False,
+            nms: bool = False,
+            batch: int =1,
+        ):
         
         self.model_path = model_path
         self.export_path = export_path
@@ -79,14 +80,6 @@ class YOLOPipeline:
             raise
 
         logging.info("all tests completed successfully!")
-        
-        # try:
-        #     for image in self.test_image:
-        #         result = self.model.predict(source=image)
-        #         logging.info(f"Model test completed. result: {result}")
-        # except Exception as e:
-        #     logging.error(f"Testing failed: {e}")
-        #     raise
     
     
     def buildExportCommand(self) -> list:
@@ -96,7 +89,21 @@ class YOLOPipeline:
         
         logging.info("Converting model to coreml format...")
         
-        pass
+        try:
+            
+            self.model.export(
+                format=self.export_format,
+                imgsz = self.imgsz,
+                device="cpu",
+                half=self.half,
+                int8=self.int8,
+                nms=self.nms
+            )
+        except Exception as e:
+            logging.error(f"coreml conversion failed with error: {e}")
+            raise
+        
+        logging.info("CoreMl conversion succeeded!")
     
     def compressModel(self) -> None:
         """
@@ -110,10 +117,18 @@ class YOLOPipeline:
             Runs the entire pipeline: loading, testing, converting and compressing the model
         """
         self.loadModel()
-        self.runTests()
+        self.runTests() #tests model before conversion
         self.convertToCoreml()
+        self.runTests() #test the model after conversion correct performance
         self.compressModel()
+    
+    
+    def populateImageArr(self) -> None:
         
+        
+        pass
+    
+    
 if __name__ == "__main__":
     pipeline = YOLOPipeline() 
     pipeline.fullPipeline()
